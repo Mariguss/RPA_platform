@@ -23,12 +23,12 @@ try:
     print("Переход на контрагенты, URL:", driver.current_url)
 
     # wait.until(ec.presence_of_element_located((By.CLASS_NAME, "vsmenu"))).click()
-    driver.find_element(By.LINK_TEXT, "Список").click()
+    wait.until(ec.element_to_be_clickable(driver.find_element(By.LINK_TEXT, "Список"))).click()
     print("Переход на список контрагентов, URL:", driver.current_url)
 
     elements = driver.find_elements(By.CLASS_NAME, "oddeven")
     element = driver.find_element(By.CLASS_NAME, "oddeven")
-    print(*elements, sep="\n")
+    print([e.text for e in elements], sep="\n")
     print(element.text)
 
 finally:
