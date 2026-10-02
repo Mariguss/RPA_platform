@@ -2,7 +2,7 @@ from urllib.parse import urlparse, parse_qs
 
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from pages import NewCustomerPage
+from rpa_worker.pages import NewCustomerPage
 from rpa_worker.exceptions import BusinessException
 
 

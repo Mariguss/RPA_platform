@@ -1,6 +1,6 @@
 from selenium import webdriver
 
-from pages import LoginPage
+from rpa_worker.pages import LoginPage
 from rpa_worker.handlers.register_customer import register_customer
 
 BASE_URL = "http://localhost:8888"
