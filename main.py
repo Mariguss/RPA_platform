@@ -1,35 +1,4 @@
-import json
-from pathlib import Path
 
-from selenium import webdriver
-
-from rpa_worker.pages import LoginPage
-from rpa_worker.handlers.register_customer import register_customer
-from shared.customer import Customer
-
-BASE_URL = "http://localhost:8888"
-print("before driver inited")
-
-driver = webdriver.Chrome()
-print("after driver inited")
-
-def load_test_data():
-    json_path = Path(__file__).parent / "test_data_customer.json"
-    json_text= json_path.read_text(encoding="utf-8")
-    data_dict = json.loads(json_text)["test_customer"]
-    return Customer.model_validate(data_dict)
-
-LoginPage(driver, BASE_URL).login("admin", "admin")
-
-# register_customer(driver, BASE_URL, "test 6", "email") из-за email будет ошибка
-test_data = load_test_data()
-register_customer(driver, BASE_URL, schema=test_data)
-
-
-
-
-
-#
 # from selenium import webdriver
 # from selenium.webdriver.common.keys import Keys
 # from selenium.webdriver.common.by import By

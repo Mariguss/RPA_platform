@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from shared.customer import Customer
+from shared.events import Customer
 
 
 class NewCustomerPage:
@@ -63,14 +63,6 @@ class NewCustomerPage:
 
         time.sleep(2)
 
-
-
-        # search_input = self.wait.until(
-        #     ec.element_to_be_clickable((By.CSS_SELECTOR, "input.select2-search__field"))
-        # )
-        # search_input.clear()
-        # search_input.send_keys(text_to_type)
-        #
         first_result_xpath = "//li[contains(@class, 'select2-results__option') and not (contains(@class, 'loading'))]"
         first_result = self.wait.until(
             ec.element_to_be_clickable((By.XPATH, first_result_xpath))
@@ -80,7 +72,7 @@ class NewCustomerPage:
 
     def fill(self, schema: Customer):
         print("New Customer Page: fill")
-        data_dict = schema.model_dump(exclude_unset=True)
+        data_dict = schema.model_dump(exclude_none=True)
 
         for field_name, value in data_dict.items():
             locator = self.FIELDS_MAP.get(field_name)
