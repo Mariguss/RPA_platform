@@ -4,7 +4,8 @@ from pydantic import BaseModel
 class CustomerBase(BaseModel):
     name: str
     name_alias: str | None = None
-    # лид, клиент, никто?
+    prospect: bool | None = None
+    customer: bool | None = None
     customer_code:str | None = None
     address: str | None = None
     zipcode: str | None = None # почтовый индекс

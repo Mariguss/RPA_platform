@@ -2,8 +2,9 @@
     "test_customer": {
         "name": "name",
         "name_alias": "name_alias",
-        "customer_code": "customer_code",
-        "address": "customer_code",
+        "prospect" : true,
+        "customer": true,
+        "address": "address",
         "zipcode": "zipcode",
         "town": "town",
         "phone": "phone",

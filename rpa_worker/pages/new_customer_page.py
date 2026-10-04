@@ -12,9 +12,10 @@ class NewCustomerPage:
     FIELDS_MAP = {
         "name": (By.NAME, "name"),
         "name_alias": (By.NAME, "name_alias"),
-        # лид, клиент, никто?
+        "prospect" : (By.NAME, "prospect"),
+        "customer": (By.NAME, "customer"),
         "customer_code": (By.NAME, "customer_code"),
-        "address": (By.NAME, "customer_code"),
+        "address": (By.NAME, "address"),
         "zipcode": (By.NAME, "zipcode"), # почтовый индекс
         "town":(By.NAME, "town"),
         # страна
@@ -29,7 +30,7 @@ class NewCustomerPage:
         "idprof4": (By.NAME, "idprof4"),
         "idprof5": (By.NAME, "idprof5"),
         "idprof6": (By.NAME, "idprof6"),
-        "assujtva_value": (By.ID, "assujtva_value"),  # Используется налог с продаж checkbox
+        "assujtva_value": (By.NAME, "assujtva_value"),  # Используется налог с продаж checkbox
         "tva_intra": (By.NAME, "tva_intra"),  # Код плательщика НДС
         "euid": (By.NAME, "euid"),  # EUID
     }
