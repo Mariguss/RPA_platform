@@ -3,24 +3,31 @@ from pydantic import BaseModel
 
 class CustomerBase(BaseModel):
     name: str
-    name_alias: str
+    name_alias: str | None = None
     # лид, клиент, никто?
     customer_code:str | None = None
-    address: str
-    zipcode: str # почтовый индекс
-    town: str
+    address: str | None = None
+    zipcode: str | None = None # почтовый индекс
+    town: str | None = None
     # страна
     # Штат/Провинция (после утсановки страны)
-    phone: str
-    fax: str
-    url: str # сайт
-    email: str
-    idprof1: str
-    idprof2: str
-    assujtva_value: bool # Используется налог с продаж checkbox
-    tva_intra: str # Код плательщика НДС
-    euid: str # EUID
+    phone: str | None = None
+    fax: str | None = None
+    url: str | None = None # сайт
+    email: str | None = None
+    idprof1: str | None = None
+    idprof2: str | None = None
+    idprof3: str | None = None
+    idprof4: str | None = None
+    idprof5: str | None = None
+    idprof6: str | None = None
+    assujtva_value: bool | None = None # Используется налог с продаж checkbox
+    tva_intra: str | None = None # Код плательщика НДС
+    euid: str | None = None # EUID
 
 
 class CustomerMore(CustomerBase):
+    pass
+
+class Customer(CustomerMore):
     pass

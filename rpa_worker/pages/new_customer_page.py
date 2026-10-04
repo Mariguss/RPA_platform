@@ -3,9 +3,36 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
+from shared.customer import Customer
+
 
 class NewCustomerPage:
     URL_PATH: str = "/societe/card.php?action=create"
+
+    FIELDS_MAP = {
+        "name": (By.NAME, "name"),
+        "name_alias": (By.NAME, "name_alias"),
+        # лид, клиент, никто?
+        "customer_code": (By.NAME, "customer_code"),
+        "address": (By.NAME, "customer_code"),
+        "zipcode": (By.NAME, "zipcode"), # почтовый индекс
+        "town":(By.NAME, "town"),
+        # страна
+        # Штат/Провинция (после утсановки страны)
+        "phone":(By.NAME, "phone"),
+        "fax": (By.NAME, "fax"),
+        "url": (By.NAME, "url"),  # сайт
+        "email": (By.NAME, "email"),
+        "idprof1": (By.NAME, "idprof1"),
+        "idprof2": (By.NAME, "idprof2"),
+        "idprof3": (By.NAME, "idprof3"),
+        "idprof4": (By.NAME, "idprof4"),
+        "idprof5": (By.NAME, "idprof5"),
+        "idprof6": (By.NAME, "idprof6"),
+        "assujtva_value": (By.ID, "assujtva_value"),  # Используется налог с продаж checkbox
+        "tva_intra": (By.NAME, "tva_intra"),  # Код плательщика НДС
+        "euid": (By.NAME, "euid"),  # EUID
+    }
 
     def __init__(self, driver, base_url: str):
         print("New Customer Page: init")
@@ -17,11 +44,24 @@ class NewCustomerPage:
         print("New Customer Page: open")
         self.driver.get(self.base_url + self.URL_PATH)
 
-    def fill(self, name: str, email: str | None = None):
+    def fill(self, schema: Customer):
         print("New Customer Page: fill")
-        self.wait.until(ec.presence_of_element_located((By.NAME, "name"))).send_keys(name)
-        if email:
-            self.driver.find_element(By.NAME, "email").send_keys(email)
+        data_dict = schema.model_dump(exclude_unset=True)
+
+        for field_name, value in data_dict.items():
+            locator = self.FIELDS_MAP.get(field_name)
+            if not locator:
+                continue
+
+            element = self.driver.find_element(*locator)
+
+            if isinstance(value, bool):
+                if value != element.is_selected():
+                    element.click()
+            else:
+                element.clear()
+                element.send_keys(value)
+
 
     def submit(self):
         print("New Customer Page: submit")
