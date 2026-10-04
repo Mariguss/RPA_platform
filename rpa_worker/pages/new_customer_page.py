@@ -1,4 +1,7 @@
+import time
+
 from selenium.common import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -17,10 +20,10 @@ class NewCustomerPage:
         "customer_code": (By.NAME, "customer_code"),
         "address": (By.NAME, "address"),
         "zipcode": (By.NAME, "zipcode"), # почтовый индекс
-        "town":(By.NAME, "town"),
-        # страна
+        "town": (By.NAME, "town"),
+        "country": (By.NAME, "country"),
         # Штат/Провинция (после утсановки страны)
-        "phone":(By.NAME, "phone"),
+        "phone": (By.NAME, "phone"),
         "fax": (By.NAME, "fax"),
         "url": (By.NAME, "url"),  # сайт
         "email": (By.NAME, "email"),
@@ -45,6 +48,36 @@ class NewCustomerPage:
         print("New Customer Page: open")
         self.driver.get(self.base_url + self.URL_PATH)
 
+    def select_by_typing(self, container_id: str, text_to_type: str):
+        print("New Customer Page: select_by_typing")
+        dropdown = self.wait.until(
+            ec.element_to_be_clickable((By.ID, container_id))
+        )
+        dropdown.click()
+
+        time.sleep(2)
+
+        actions = ActionChains(self.driver)
+        actions.send_keys(text_to_type)
+        actions.perform()
+
+        time.sleep(2)
+
+
+
+        # search_input = self.wait.until(
+        #     ec.element_to_be_clickable((By.CSS_SELECTOR, "input.select2-search__field"))
+        # )
+        # search_input.clear()
+        # search_input.send_keys(text_to_type)
+        #
+        first_result_xpath = "//li[contains(@class, 'select2-results__option') and not (contains(@class, 'loading'))]"
+        first_result = self.wait.until(
+            ec.element_to_be_clickable((By.XPATH, first_result_xpath))
+        )
+        first_result.click()
+
+
     def fill(self, schema: Customer):
         print("New Customer Page: fill")
         data_dict = schema.model_dump(exclude_unset=True)
@@ -52,6 +85,9 @@ class NewCustomerPage:
         for field_name, value in data_dict.items():
             locator = self.FIELDS_MAP.get(field_name)
             if not locator:
+                continue
+            if field_name == "country":
+                self.select_by_typing("select2-selectcountry_id-container", str(value))
                 continue
 
             element = self.driver.find_element(*locator)

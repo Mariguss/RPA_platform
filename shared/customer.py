@@ -10,8 +10,8 @@ class CustomerBase(BaseModel):
     address: str | None = None
     zipcode: str | None = None # почтовый индекс
     town: str | None = None
-    # страна
-    # Штат/Провинция (после утсановки страны)
+    country: str | None = None
+    # Штат/Провинция (после утсановки страны) не получается выбрать из списка (пусто)
     phone: str | None = None
     fax: str | None = None
     url: str | None = None # сайт

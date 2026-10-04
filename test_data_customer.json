@@ -7,6 +7,7 @@
         "address": "address",
         "zipcode": "zipcode",
         "town": "town",
+        "country": "Россия",
         "phone": "phone",
         "fax": "fax",
         "url": "url",
@@ -15,8 +16,6 @@
         "idprof2": "idprof2",
         "idprof3": "idprof3",
         "idprof4": "idprof4",
-        "idprof5": "idprof5",
-        "idprof6": "idprof6",
         "assujtva_value": false,
         "tva_intra": "tva_intra",
         "euid": "euid"
