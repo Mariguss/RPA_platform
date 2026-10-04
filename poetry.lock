@@ -178,6 +178,26 @@ files = [
 all = ["coverage (>=7.10.0)", "hypothesis (>=6.141.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.16.0)", "ty (>=0.0.37)"]
 
 [[package]]
+name = "kafka-python"
+version = "3.0.11"
+description = "Pure Python client for Apache Kafka"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "kafka_python-3.0.11-py3-none-any.whl", hash = "sha256:9d10cab4e11e02545d82c7e5af5702da5aa46dd4eccd11ad92a50bf6dbbecd14"},
+    {file = "kafka_python-3.0.11.tar.gz", hash = "sha256:a003d927e79c801d6cfd1e59ceaaf78807351e75cdb5b8ee9ce4262586f9780f"},
+]
+
+[package.extras]
+benchmarks = ["pyperf"]
+crc32c = ["crc32c"]
+lz4 = ["lz4"]
+snappy = ["python-snappy"]
+testing = ["pytest", "pytest-mock", "pytest-timeout"]
+zstd = ["zstandard"]
+
+[[package]]
 name = "outcome"
 version = "1.3.0.post0"
 description = "Capture the outcome of Python function calls."
@@ -537,4 +557,4 @@ h11 = ">=0.16.0,<1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.14"
-content-hash = "1d453a894ef32326d0ec690df7f06f95234a8e1eefe6cee0bd79573c0cb74812"
+content-hash = "57eb4df9129e86b3f8b170b9376857f7d0e3bbce6ffe7c2da8f9c8bf1323640e"

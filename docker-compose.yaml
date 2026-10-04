@@ -3,47 +3,84 @@
 # docker-compose logs
 
 services:
-    mariadb:
-        image: mariadb:11.4
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-            MYSQL_DATABASE: ${MYSQL_DATABASE:-dolidb}
-            MYSQL_USER: ${MYSQL_USER:-dolidbuser}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dolidbpass}
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: CONTROLLER://kafka:9093,INTERNAL://kafka:9094,EXTERNAL://0.0.0.0:19092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9094,EXTERNAL://localhost:19092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_NUM_PARTITIONS: 1
+    networks:
+      - rpa-net
+    volumes:
+      - kafka-data:/var/lib/kafka/data
 
-        volumes:
-            - dolibarr_mariadb:/var/lib/mysql
+  kafka-ui:
+    image: kafbat/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9094
+    networks:
+      - rpa-net
+    depends_on:
+      - kafka
 
-    web:
-        # Choose the version of image to install
-        # dolibarr/dolibarr:latest (the latest stable version)
-        # dolibarr/dolibarr:develop
-        # dolibarr/dolibarr:x.y.z
-        image: dolibarr/dolibarr:24.0.0
-        environment:
-            DOLI_INIT_DEMO: ${DOLI_INIT_DEMO:-0}
-            DOLI_DB_HOST: ${DOLI_DB_HOST:-mariadb}
-            DOLI_DB_NAME: ${DOLI_DB_NAME:-dolidb}
-            DOLI_DB_USER: ${DOLI_DB_USER:-dolidbuser}
-            DOLI_DB_PASSWORD: ${DOLI_DB_PASSWORD:-dolidbpass}
-            DOLI_URL_ROOT: "${DOLI_URL_ROOT:-http://localhost:8888}"
-            DOLI_ADMIN_LOGIN: "${DOLI_ADMIN_LOGIN:-admin}"
-            DOLI_ADMIN_PASSWORD: "${DOLI_ADMIN_PASSWORD:-admin}"
-            DOLI_CRON: ${DOLI_CRON:-0}
-            DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
-            DOLI_COMPANY_NAME: ${DOLI_COMPANY_NAME:-MyBigCompany}
-            WWW_USER_ID: ${WWW_USER_ID:-1000}
-            WWW_GROUP_ID: ${WWW_GROUP_ID:-1000}
+  mariadb:
+      image: mariadb:11.4
+      environment:
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+          MYSQL_DATABASE: ${MYSQL_DATABASE:-dolidb}
+          MYSQL_USER: ${MYSQL_USER:-dolidbuser}
+          MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dolidbpass}
 
-        ports:
-            - "8888:80"
-        depends_on:
-            - mariadb
-        volumes:
-            - dolibarr_documents:/var/www/documents
-            - dolibarr_custom:/var/www/html/custom
+      volumes:
+          - dolibarr_mariadb:/var/lib/mysql
+
+  web:
+      image: dolibarr/dolibarr:24.0.0
+      environment:
+          DOLI_INIT_DEMO: ${DOLI_INIT_DEMO:-0}
+          DOLI_DB_HOST: ${DOLI_DB_HOST:-mariadb}
+          DOLI_DB_NAME: ${DOLI_DB_NAME:-dolidb}
+          DOLI_DB_USER: ${DOLI_DB_USER:-dolidbuser}
+          DOLI_DB_PASSWORD: ${DOLI_DB_PASSWORD:-dolidbpass}
+          DOLI_URL_ROOT: "${DOLI_URL_ROOT:-http://localhost:8888}"
+          DOLI_ADMIN_LOGIN: "${DOLI_ADMIN_LOGIN:-admin}"
+          DOLI_ADMIN_PASSWORD: "${DOLI_ADMIN_PASSWORD:-admin}"
+          DOLI_CRON: ${DOLI_CRON:-0}
+          DOLI_CRON_KEY: ${DOLI_CRON_KEY:-mycronsecurekey}
+          DOLI_COMPANY_NAME: ${DOLI_COMPANY_NAME:-MyBigCompany}
+          WWW_USER_ID: ${WWW_USER_ID:-1000}
+          WWW_GROUP_ID: ${WWW_GROUP_ID:-1000}
+
+      ports:
+          - "8888:80"
+      depends_on:
+          - mariadb
+      volumes:
+          - dolibarr_documents:/var/www/documents
+          - dolibarr_custom:/var/www/html/custom
 
 volumes:
-    dolibarr_mariadb:
-    dolibarr_documents:
-    dolibarr_custom:
+  kafka-data:
+  dolibarr_mariadb:
+  dolibarr_documents:
+  dolibarr_custom:
+
+networks:
+  rpa-net:
+    driver: bridge
